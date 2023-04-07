@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <title>Excel to JSON</title>
+     <!-- ++++++++++++++++++++++ CSS style files +++++++++++++++++++++++ -->
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+
+  <body>
+
+  <div class="container">
+  <h1>Excel file to convert into JSON using Database phpmyadmin</h1>
+    <input type="file" id="file_upload"  accept=".xls,.xlsx"/>
+    <button id="click">Upload</button>  
+    <div id="show"></div>
+  </div>
+
+  <!-- ============================= JS files ================================== -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.min.js"></script> 
+  <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+   
+  <!-- ============================= JS files ================================== -->
+
+  <!-- ========== JS Code start ============ -->
+
+    <script>  
+       var data_js;
+            $(document).ready(function()
+            {
+                $('#click').click(function()
+                {
+                    var files = document.getElementById('file_upload').files;
+                    if(files.length==0){
+                    alert("Please choose any file...");
+                    return;
+                    }
+                    var filename = files[0].name;
+                    var extension = filename.substring(filename.lastIndexOf(".")).toUpperCase();
+                    if (extension == '.XLS' || extension == '.XLSX')
+                     {
+                        excelFileToJSON(files[0]); 
+                        let g=new FormData();   
+                        g.append("ajx",data_js);
+                        console.log("done ");
+                      }
+                      else
+                      {
+                        alert("Please select a valid excel file.");
+                      }        
+                });
+            });
+
+            
+            function excelFileToJSON(file){
+        try {
+          var reader = new FileReader();
+          reader.readAsBinaryString(file);
+          reader.onload = function(e) {
+
+              var data = e.target.result;
+              var workbook = XLSX.read(data, {
+                  type : 'binary'
+              });
+              var result = {};
+              workbook.SheetNames.forEach(function(sheetName) {
+              var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+              if (roa.length > 0) {
+                  result[sheetName] = roa;
+              }
+            });
+                let op=JSON.stringify(result);
+                $.ajax
+                ({
+                  url : 'php/json.php',
+                  type : 'post',
+                  processData:false,
+                  data: 'ajx='+op,
+                  success : function(response)
+                  {
+                    console.log("Mys re"+response);
+                    $("#show").html(response);
+                  }
+                });
+
+              }
+          }catch(e){
+              console.error(e);
+          }
+    }
+      
+  </script>
+<!-- ========== JS Code End ============ -->
+
+</body>
+</html>

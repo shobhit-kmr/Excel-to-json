@@ -1,0 +1,24 @@
+body{
+    background: rgb(188,161,207);
+    background: linear-gradient(90deg, rgba(209, 162, 243, 0.849) 0%, rgba(243, 212, 212, 0.479) 50%, rgba(115, 224, 197, 0.699) 100%);
+  }
+  .container{
+    position: relative;
+    top: 50px;
+    margin: auto;
+    width: 60%;
+    text-align: center;
+
+  }
+
+  #show{
+    border-radius: 5px;
+    height: auto;
+    width: 80%;
+    padding: 20px;
+    position: relative;
+    top: 10px;
+    margin: auto;
+    background-color: #fff;
+
+  }
